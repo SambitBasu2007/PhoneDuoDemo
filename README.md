@@ -4,7 +4,6 @@ https://sambitbasu2007.github.io/PhoneDuoDemo/
 
 A browser-based study of foldable screen transitions, built with Three.js. The Apple iPhone Duo (Star White) reference model is rendered in real time and folds from fully open to fully closed, with its inner display bending around the hinge while the outer cover screen takes over.
 
-[Live demo]([https://sambitbasu2007.github.io/PhoneDuoDemo/])
 
 ## What it does
 
