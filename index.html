@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>iPhone Duo · Fold Preview</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+</head>
+<body>
+  <header class="page-header"><h1>iPhone Duo Fold · Preview · by Sambit</h1></header>
+  <main>
+    <section class="fold-preview" aria-label="iPhone Duo fold preview">
+      <div id="viewport" aria-label="iPhone Duo 3D model. Drag to rotate, scroll to zoom."></div>
+      <div class="control-dock" role="group" aria-label="Fold animation controls">
+        <button id="play" class="play" aria-label="Play animation" disabled><svg id="pause-icon" viewBox="0 0 24 24" hidden><path d="M8 6v12M16 6v12"/></svg><svg id="play-icon" viewBox="0 0 24 24"><path d="m9 5 10 7-10 7Z"/></svg></button>
+        <input id="angle" aria-label="Fold progress" type="range" min="0" max="180" value="180" step="0.1" disabled>
+      </div>
+    </section>
+    <div class="page-notes" aria-label="About this project">
+      <section>
+        <h2>Overview</h2>
+        <p>A small browser study built around Apple's public iPhone Duo (Star White) model, rendered in real time with Three.js and WebGL. The device lives in an interactive 3D scene you can orbit and zoom freely, lit by a generated studio environment with ACES filmic tone mapping.</p>
+        <p>The focus is the fold transition itself. As the hinge closes, the flexible inner display bends around it while the outer cover screen takes over — complete with a soft blur and a darkening pass that follows the image as it moves. The rear-camera half of the device stays fixed; only the cover half rotates, matching the real hardware's motion.</p>
+        <p>There is no build step and no framework here. Plain HTML, CSS, and JavaScript modules — served statically, running entirely in your browser, with Three.js bundled locally so nothing is fetched from a CDN at runtime.</p>
+      </section>
+      <section>
+        <h2>How it works</h2>
+        <p>The geometry ships as a USDZ file downloaded from apple.com and preprocessed by scripts/prepare-assets.py into a flattened USD crate (iPhone_Duo_Render.usdc), with its 45 textures extracted alongside and their paths rewritten for the browser.</p>
+        <p>At load time the two screen meshes are detached from the model and given a custom shader. It projects the launcher interface — launcher-inner.png and launcher-outer.png — onto the unfolded screen planes from a fixed front view, so the UI stays perfectly crisp and legible at any fold angle, bending and fading with the display instead of smearing with it.</p>
+      </section>
+      <section>
+        <h2>Controls</h2>
+        <ul>
+          <li><kbd>drag</kbd> orbit around the device in any direction</li>
+          <li><kbd>scroll</kbd> zoom the camera in and out, within sensible limits</li>
+          <li><kbd>play</kbd> run the full open-to-close cycle, easing through the hinge's nonlinear motion</li>
+          <li><kbd>slider</kbd> scrub the fold manually — 180° is fully open, 0° is closed. The screens respond live as you drag: the inner UI bends with the display and fades into the outer screen near closure.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Credits</h2>
+        <p>The device model and screen assets are property of Apple Inc. and are used here purely as reference material for a non-commercial rendering study; see the README for full attribution. Everything else — the fold shader, UI compositing, and the control dock — is original code released under the MIT license.</p>
+        <div class="note-callout">This is an independent animation study, not an Apple product and not endorsed by Apple. iPhone and Apple are trademarks of Apple Inc.</div>
+      </section>
+    </div>
+  </main>
+  <footer class="page-footer">
+    <a href="#" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
