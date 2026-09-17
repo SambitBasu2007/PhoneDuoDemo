@@ -47,7 +47,7 @@ The app is fully static — no build step, no CDN calls at runtime; Three.js is 
 
 ## License and credits
 
-Original application code is released under the [MIT license](LICENSE).
+
 
 **Three.js** (bundled in `vendor/three/`) — MIT license, preserved in `vendor/three/LICENSE`.
 **fflate** (bundled in `vendor/three/examples/jsm/libs/fflate.module.js`) — MIT license, preserved in `fflate.LICENSE`.
