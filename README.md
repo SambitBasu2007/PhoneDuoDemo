@@ -4,9 +4,7 @@ https://sambitbasu2007.github.io/PhoneDuoDemo/
 
 A browser-based study of foldable screen transitions, built with Three.js. The Apple iPhone Duo (Star White) reference model is rendered in real time and folds from fully open to fully closed, with its inner display bending around the hinge while the outer cover screen takes over.
 
-
 [Live demo](https://sambitbasu2007.github.io/PhoneDuoDemo/)
-
 
 ## What it does
 
@@ -46,7 +44,6 @@ A browser-based study of foldable screen transitions, built with Three.js. The A
 The app is fully static — no build step, no CDN calls at runtime; Three.js is bundled in `vendor/three/`. The Apple model and screen images are not stored in the repository. `scripts/prepare-assets.py` downloads the original Star White USDZ from apple.com, selects the model's landscape pose, flattens its references into a single USD crate, extracts its 45 textures, and rewrites their paths for the browser. The prepared files land in the git-ignored `assets/` directory, and `vercel.json` runs the same script during every Vercel build so deployments include the model without ever storing it.
 
 ## License and credits
-
 
 
 **Three.js** (bundled in `vendor/three/`) — MIT license, preserved in `vendor/three/LICENSE`.

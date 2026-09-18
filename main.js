@@ -3,6 +3,9 @@ import { USDLoader } from 'three/addons/loaders/USDLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { loadDefaultUIs } from './ui.js';
+import { mountGlass, startGlassLoop } from './liquid-glass/glass.js';
+
+mountGlass(document.querySelector('.page-header'), 'header');
 
 const viewport = document.querySelector('#viewport');
 const slider = document.querySelector('#angle');
@@ -10,7 +13,7 @@ const play = document.querySelector('#play');
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(32, 1, .1, 250);
 camera.position.set(0, 0, 30);
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setClearColor(0xf6f6f3, 0);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -266,11 +269,51 @@ try {
   document.querySelectorAll('button, input').forEach(element => element.disabled = false);
   ready = true;
   setAngle(180);
+  startAutoPlay();
 } catch (error) {
-  alert('Unable to load the model. Refresh the page to try again.');
   console.error(error);
 }
 let lastTime = performance.now();
+mountGlass(document.querySelector('.control-dock'));
+startGlassLoop(); // After setAnimationLoop: compose always samples the frame just drawn.
+const AUTO_PLAY_DELAY = .9; // Seconds after load before the fold cycle starts by itself.
+let autoPlayTimer = null;
+
+function startAutoPlay() {
+  // Any user interaction with the dock takes precedence over the auto-play.
+  play.addEventListener('click', cancelAutoPlay);
+  slider.addEventListener('input', cancelAutoPlay);
+  if (document.hidden) return; // Don't run the cycle in a background tab; it'll start on return.
+  autoPlayTimer = setTimeout(() => {
+    autoPlayTimer = null;
+    if (!playing && !transition) {
+      phase = 1.2 + Math.acos(2 * angle / 180 - 1) / Math.PI * 3.1;
+      setPlaying(true);
+    }
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+  }, AUTO_PLAY_DELAY * 1000);
+  document.addEventListener('visibilitychange', onVisibilityChange);
+}
+function cancelAutoPlay() {
+  if (!autoPlayTimer) return;
+  clearTimeout(autoPlayTimer);
+  autoPlayTimer = null;
+  document.removeEventListener('visibilitychange', onVisibilityChange);
+}
+function onVisibilityChange() {
+  if (document.hidden) return;
+  document.removeEventListener('visibilitychange', onVisibilityChange);
+  if (autoPlayTimer) {
+    clearTimeout(autoPlayTimer);
+    autoPlayTimer = null;
+    if (!playing && !transition) {
+      phase = 1.2 + Math.acos(2 * angle / 180 - 1) / Math.PI * 3.1;
+      setPlaying(true);
+    }
+  }
+}
+
+if (ready) startAutoPlay();
 renderer.setAnimationLoop(now => {
   const delta = Math.min((now - lastTime) / 1000, .05);
   lastTime = now;
